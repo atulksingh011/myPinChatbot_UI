@@ -28,7 +28,7 @@ const ChatBox = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://164.52.215.147:5005/webhooks/rest/webhook",
+        "/api",
         {
           sender: "test_user1",
           message,
