@@ -1,0 +1,48 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # replace with your default branch if not "main"
+  workflow_dispatch: {}
+
+  # permission can be added at job level or workflow level
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git clone the repository 🛎️
+        uses: actions/checkout@v2 # This is a pre-built action
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::371726271789:role/github-mypin-react-s3-access
+          aws-region: "ap-south-1"
+
+      - name: Install and Build 🔧
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy 🚀
+        run: aws s3 sync  build s3://${{ secrets.BUCKET_NAME }}/ --delete
+
+env:
+  VITE_API_URL: ${{ secrets.DOMAIN }}
+  VITE_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  VITE_APP_BASE_URL: ${{ secrets.APP_BASE_URL }}
+  VITE_SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  VITE_ENV: ${{ secrets.ENV }}
+  VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+  VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+  VITE_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+  VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+  VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+  VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+  VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
