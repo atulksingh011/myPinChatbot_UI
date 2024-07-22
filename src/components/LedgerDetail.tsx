@@ -167,7 +167,6 @@ const LedgerDetail = () => {
           className=""
           type="search"
           placeholder="Yes send reminder again..."
-          autoFocus
         />
       </form>
       <p className="mt-1 text-muted">
