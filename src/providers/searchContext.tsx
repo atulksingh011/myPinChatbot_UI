@@ -20,19 +20,19 @@ export const SearchContext = createContext<{
 
 const SearchProvider = ({ children }: any) => {
   const [type, setType] = useState(SEARCH_TYPE.contact);
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const getData = async (searchText: string) => {
     if (searchText.indexOf("product") !== -1) {
-      setSearch(searchText.replace(/product[^ ]*/, "").trim());
+      // setSearch(searchText.replace(/product[^ ]*/, "").trim());
       setType(SEARCH_TYPE.product);
       // setData(await )
       return SEARCH_TYPE.product;
     } else {
       const contactName = searchText.trim();
-      setSearch(contactName);
+      // setSearch(contactName);
       setType(SEARCH_TYPE.contact);
       setLoading(true);
       const response = await getContact(contactName);
