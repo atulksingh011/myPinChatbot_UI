@@ -11,7 +11,7 @@ const ContactDetail = () => {
 
   return (
     <>
-      <p className="fs-3 mb-1">
+      <p className="fs-5 mb-1">
         Ok,
         <br />
         What exactly do you want to see for contact "{contactData?.name}"?
@@ -95,7 +95,7 @@ const ContactDetail = () => {
           text="Chat"
         ></ActionButton>
       </div>
-      <p className="fs-3 mb-1">
+      <p className="fs-5 mb-1">
         Or,
         <br />
         Do you wish to undertake any actions about contact "{contactData?.name}
@@ -229,7 +229,7 @@ const ContactDetail = () => {
 
 export default ContactDetail;
 
-const ActionButton = ({
+export const ActionButton = ({
   icon,
   text,
   action,
@@ -240,13 +240,13 @@ const ActionButton = ({
 }) => {
   return (
     <button
-      className="btn btn-outline-primary border-0"
+      className="btn"
       style={{ maxWidth: "120px" }}
       onClick={() => action?.()}
     >
       <div
-        className="rounded-circle border border-2 align-items-center border d-flex justify-content-center rounded-circle mx-auto mb-2"
-        style={{ height: "50px", width: "50px" }}
+        className="align-items-center d-flex justify-content-center rounded-circle mx-auto "
+        style={{ height: "50px", width: "50px",color:"#1bbb79"}}
       >
         {icon}
       </div>

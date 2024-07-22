@@ -17,6 +17,8 @@ const App = () => {
       <div className="page-loader">
         <div className="txt top">
           <h1>myPin.ai</h1>
+          {/* <img src="assets/myPin-logo.png" alt="" className="img-fluid"
+            /> */}
         </div>
         <div className="spinner"></div>
         <div className="txt below">

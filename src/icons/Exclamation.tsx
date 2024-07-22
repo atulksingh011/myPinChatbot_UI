@@ -2,9 +2,9 @@ function Exclamation({ ...rest }) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
-        fill="#ffc700"
+        width="30"
+        height="30"
+        fill="#f1416c"
         className="bi bi-exclamation-circle-fill"
         viewBox="0 0 16 16"
         {...rest}
