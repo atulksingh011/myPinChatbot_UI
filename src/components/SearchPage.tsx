@@ -3,15 +3,16 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../providers/authContext";
 import { useSetHeadingBackButtonToggle } from "../providers/headingContext";
-import { SearchContext } from "../providers/searchContext";
+import { SEARCH_TYPE, SearchContext } from "../providers/searchContext";
+import Exclamation from "../icons/Exclamation";
 
 const SearchPage = () => {
   const { handleSubmit, register, watch, setValue, setFocus } = useForm<any>();
-
-  const {loading, getData} = useContext(SearchContext);
+  const { loading, getData} = useContext(SearchContext);
   const [lastSearchValue, setLastSearchValue] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   useSetHeadingBackButtonToggle(false);
 
   const showClearButton = !!watch("search");
@@ -21,10 +22,15 @@ const SearchPage = () => {
       return;
     }
 
-    const route = await getData(search);
+    const { type, data } = await getData(search);
 
-    setLastSearchValue(search);
-    navigate(`/${route}`);
+    if (type === SEARCH_TYPE.contact && !data) {
+      setError("This contact does not exist.");
+    } else {
+      setLastSearchValue(search);
+      setError(null); 
+      navigate(`/${type}`);
+    }
   };
   return (
     <>
@@ -91,6 +97,13 @@ const SearchPage = () => {
       <p className="mt-1 text-muted">
         Just type in any keyword and see the magic.
       </p>
+      {error && (
+        <div className="mt-3">
+         <Exclamation/> {error} 
+         <br/>
+         <a href="" >Do you want to add this contact ?</a>
+        </div>
+      )}
     </>
   );
 };

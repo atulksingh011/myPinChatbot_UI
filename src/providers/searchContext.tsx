@@ -10,7 +10,7 @@ export const SearchContext = createContext<{
   type: SEARCH_TYPE;
   data: any;
   loading: boolean;
-  getData: (data: string) => void;
+  getData: any;
 }>({
   type: SEARCH_TYPE.contact,
   data: null,
@@ -24,21 +24,22 @@ const SearchProvider = ({ children }: any) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const getData = async (searchText: string) => {
+  const getData = async (searchText: string): Promise<{type: string, data: any}> => {
     if (searchText.indexOf("product") !== -1) {
       // setSearch(searchText.replace(/product[^ ]*/, "").trim());
       setType(SEARCH_TYPE.product);
       // setData(await )
-      return SEARCH_TYPE.product;
+      return { type: SEARCH_TYPE.product, data: null };
     } else {
       const contactName = searchText.trim();
       // setSearch(contactName);
       setType(SEARCH_TYPE.contact);
       setLoading(true);
       const response = await getContact(contactName);
-      setData(response.data?.[0]);
+      const contactData = response.data?.length ? response.data[0] : null;
+      setData(contactData);
       setLoading(false);
-      return SEARCH_TYPE.contact;
+      return { type: SEARCH_TYPE.contact, data: contactData };
     }
   };
 
