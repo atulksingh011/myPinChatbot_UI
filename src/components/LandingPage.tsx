@@ -4,6 +4,7 @@ import ContactDetail from "./ContactDetail";
 import { HeadingContext } from "../providers/headingContext";
 import { useContext } from "react";
 import LedgerDetail from "./LedgerDetail";
+import myPinLogo from "/src/assets/myPin-logo.png";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ const LandingPage = () => {
               style={{ marginTop: "0px" }}
             >
               <img
-                src="src/assets/myPin-logo.png"
+                src={myPinLogo}
                 className="img-fluid"
                 style={{ height: "70px" }}
               />

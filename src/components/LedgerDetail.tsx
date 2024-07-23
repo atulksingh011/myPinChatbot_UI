@@ -58,33 +58,29 @@ const LedgerDetail = () => {
 
   return (
     <>
-      <p className="fs-4 mb-1">Showing {contactData?.name}'s Ledger</p>
+      <p className="fs-4 mb-1">{contactData?.name}'s Ledger</p>
       <div>
-        <p className="mt-5">
-          Currently,{" "}
-          {balance !== undefined
-            ? balance >= 0
-              ? "You will receive"
-              : "You will pay"
-            : ""}
-          <strong> {currencyFormat(balance)}</strong> from {contactData?.name}
+        <p className="mt-3">
+          <strong>Current Balance:{" "}</strong>
           {balance >= 0 && ledgerData?.dayReceivable !== 0 && (
             <span>
-              {" "}
-              in approximately <strong>{ledgerData?.dayReceivable} days</strong>
-              .
+              <strong> {currencyFormat(balance)}</strong>
+              <p className="fst-italic">
+              You will Receive this amount in approximately {ledgerData?.dayReceivable} days.
+              </p>
             </span>
           )}
           {balance < 0 && ledgerData?.daysPayable !== 0 && (
             <span>
-              {" "}
-              in approximately <strong>{ledgerData?.daysPayable} days</strong>.
+              <strong> {currencyFormat(balance)}</strong> 
+              <p>
+              You will have to pay this amount in approximately {ledgerData?.daysPayable} days.
+              </p>
             </span>
           )}
-          Below are the complete details of the ledger:
         </p>
-        <h6>
-          <span className={`${ledgerData?.ls?._id ? "text-primary" : ""}`}>
+        <strong>
+          <span>
             {ledgerData?.ls?._id ? "Last Settled" : "Opening"} Balance:
           </span>
           <span
@@ -100,23 +96,25 @@ const LedgerDetail = () => {
             {ledgerData?.lsb !== 0
               ? currencyFormat(ledgerData?.lsb)
               : currencyFormat(ledgerData?.ob)}
-           
-           
+            </span>
+            </strong>
+           <p>
            {balance >= 0 && ledgerData?.dayReceivable !== 0 && (
-            <span className="mx-1">
+            <span className="fst-italic">
               {" "}
-              (in approximately {ledgerData?.dayReceivable} days)
+             You will receive this in {ledgerData?.dayReceivable} days
               
             </span>
           )}
           {balance < 0 && ledgerData?.daysPayable !== 0 && (
-            <span className="mx-1">
+            <span className="fst-italic">
               {" "}
-             (in approximately {ledgerData?.daysPayable} days)
+             You have to pay this in {ledgerData?.daysPayable} days
             </span>
           )}
-          </span>
-        </h6>
+          </p>
+
+        <h6 className="mt-5"><strong>Ledger Details:</strong></h6> 
         <div className="table-responsive" style={{ height: "300px" }}>
           <table className="table mt-2">
             <thead>
@@ -161,10 +159,10 @@ const LedgerDetail = () => {
           </table>
         </div>
         <p className="mt-5">
-          I can see that your payment terms were for 30 days, and it has already
-          exceeded that. Do you want me to send a payment reminder to{" "}
-          {contactData?.name} again? By the way, I sent them a reminder 5 days
-          ago, which they read on the same day.
+          Your payment terms were for <strong>30 days,</strong> and this period has already been {" "}
+          <strong>exceeded</strong>. Would you like me to send another payment reminder to{" "}
+          {contactData?.name} ? Last reminder was sent 5 days
+          ago, (read on the same day).
         </p>
       </div>
       <form
