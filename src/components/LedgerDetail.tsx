@@ -12,13 +12,14 @@ interface LedgerData {
   ob: number;
   settlement: any;
   list: any;
+  daysPayable: number;
 }
 
 const LedgerDetail = () => {
   const { data: contactData } = useContext(SearchContext);
   const [ledgerData, setLedgerData] = useState<LedgerData | null>(null);
   // const navigate = useNavigate();
- 
+
   const combinedList = ledgerData?.list || [];
   const getBalance = () => {
     return combinedList.reduce((total: any, obj: any) => {
@@ -40,7 +41,6 @@ const LedgerDetail = () => {
       if (contactData?._id) {
         try {
           const response = await getUnsettled(contactData._id);
-          console.log(response);
           setLedgerData(
             response.data?.settlement ? response.data.settlement : null
           );
@@ -55,20 +55,33 @@ const LedgerDetail = () => {
 
   useSetHeadingBackButtonToggle(true);
 
+
   return (
     <>
       <p className="fs-4 mb-1">Showing {contactData?.name}'s Ledger</p>
       <div>
         <p className="mt-5">
-          Currently, {balance !== undefined
-              ? balance >= 0
-                ? "You will receive"
-                : "You will pay"
-              : ""} 
-              <strong>{" "}{currencyFormat(balance)}</strong> from{" "}
-          {contactData?.name} in approximately{" "}
-          <strong>{ledgerData?.dayReceivable} days</strong>. Below are the
-          complete details of the ledger:
+          Currently,{" "}
+          {balance !== undefined
+            ? balance >= 0
+              ? "You will receive"
+              : "You will pay"
+            : ""}
+          <strong> {currencyFormat(balance)}</strong> from {contactData?.name}
+          {balance >= 0 && ledgerData?.dayReceivable !== 0 && (
+            <span>
+              {" "}
+              in approximately <strong>{ledgerData?.dayReceivable} days</strong>
+              .
+            </span>
+          )}
+          {balance < 0 && ledgerData?.daysPayable !== 0 && (
+            <span>
+              {" "}
+              in approximately <strong>{ledgerData?.daysPayable} days</strong>.
+            </span>
+          )}
+          Below are the complete details of the ledger:
         </p>
         <h6>
           <span className={`${ledgerData?.ls?._id ? "text-primary" : ""}`}>
@@ -87,56 +100,66 @@ const LedgerDetail = () => {
             {ledgerData?.lsb !== 0
               ? currencyFormat(ledgerData?.lsb)
               : currencyFormat(ledgerData?.ob)}
+           
+           
+           {balance >= 0 && ledgerData?.dayReceivable !== 0 && (
             <span className="mx-1">
-              (you will receive in {ledgerData?.dayReceivable} days)
+              {" "}
+              (in approximately {ledgerData?.dayReceivable} days)
+              
             </span>
+          )}
+          {balance < 0 && ledgerData?.daysPayable !== 0 && (
+            <span className="mx-1">
+              {" "}
+             (in approximately {ledgerData?.daysPayable} days)
+            </span>
+          )}
           </span>
         </h6>
-        <div className="table-responsive" style={{height:"300px"}}>
-        <table className="table mt-2">
-          <thead>
-            <tr>
-              <th className="col-md-2 col-4 col-sm-4">Type</th>
-              <th className="col-md-2 col-4 col-sm-4 text-center">DR</th>
-              <th className="col-md-2 col-4 col-sm-4 text-center">CR</th>
-            </tr>
-          </thead>
-          <tbody>
-            {combinedList.map((item: any) => (
-              <tr
-                key={item._id}
-              >
-                <td>
-                  <div className="col-md-12 col-12 col-sm-4 d-flex">
-                    <div className="text-primary">
-                    <h6>{item.type}</h6>
-                    </div>
-                    {item.mode && (
-                      <div className="ml-2  text-primary">
-                        <h6>({item.mode})</h6>
-                      </div>
-                    )}
-                  </div>
-                  <div className="col-md-12 col-12 col-sm-6">
-                    <CalendarIcon />
-                    <span className="mx-1">{dateFormat(item.date)}</span>
-                  </div>
-                </td>
-                <td className="col-md-2 col-4 col-sm-4 text-center">
-                  {item.dr !== 0 ? (
-                    <p className="text-primary">{currencyFormat(item.dr)}</p>
-                  ) : null}
-                </td>
-                <td className="col-md-2 col-4 col-sm-4 text-center">
-                  {item.cr !== 0 ? (
-                    <p className="text-primary">{currencyFormat(item.cr)}</p>
-                  ) : null}
-                </td>
+        <div className="table-responsive" style={{ height: "300px" }}>
+          <table className="table mt-2">
+            <thead>
+              <tr>
+                <th className="col-md-2 col-4 col-sm-4">Type</th>
+                <th className="col-md-2 col-4 col-sm-4 text-center">DR</th>
+                <th className="col-md-2 col-4 col-sm-4 text-center">CR</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {combinedList.map((item: any) => (
+                <tr key={item._id}>
+                  <td>
+                    <div className="col-md-12 col-12 col-sm-4 d-flex">
+                      <div className="text-primary">
+                        <h6>{item.type}</h6>
+                      </div>
+                      {item.mode && (
+                        <div className="ml-2  text-primary">
+                          <h6>({item.mode})</h6>
+                        </div>
+                      )}
+                    </div>
+                    <div className="col-md-12 col-12 col-sm-6">
+                      <CalendarIcon />
+                      <span className="mx-1">{dateFormat(item.date)}</span>
+                    </div>
+                  </td>
+                  <td className="col-md-2 col-4 col-sm-4 text-center">
+                    {item.dr !== 0 ? (
+                      <p className="text-primary">{currencyFormat(item.dr)}</p>
+                    ) : null}
+                  </td>
+                  <td className="col-md-2 col-4 col-sm-4 text-center">
+                    {item.cr !== 0 ? (
+                      <p className="text-primary">{currencyFormat(item.cr)}</p>
+                    ) : null}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <p className="mt-5">
           I can see that your payment terms were for 30 days, and it has already
           exceeded that. Do you want me to send a payment reminder to{" "}
